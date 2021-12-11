@@ -1,0 +1,26 @@
+version: '3'
+services:
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: fotune-server
+    ports:
+      - 8000:8000
+    # pryを使用してデバッグができるよう設定
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./server:/go/src/github.com/imokenpi2011/fotune-slipper # マウントディレクトリ指定ls
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: fotune-client
+    ports:
+      - 8080:8080
+    # pryを使用してデバッグができるよう設定
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./client:/usr/src/app # マウントディレクトリ指定ls
