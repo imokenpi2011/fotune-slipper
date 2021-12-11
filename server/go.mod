@@ -1,4 +1,4 @@
-module golang
+module fotune-slipper/server
 
 go 1.17
 
