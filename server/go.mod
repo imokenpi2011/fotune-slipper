@@ -1,4 +1,4 @@
-module fotune-slipper/server
+module github.com/imokenpi2011/fotune-slipper/server
 
 go 1.17
 

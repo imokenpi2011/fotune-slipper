@@ -5,10 +5,16 @@ import (
 	"log"
 
 	firebase "firebase.google.com/go"
+	"github.com/imokenpi2011/fotune-slipper/server/app/models"
 	"google.golang.org/api/option"
 )
 
 func main() {
+	log.Println("start")
+	models.RegistFotune()
+}
+
+func insertData() {
 	// Use a service account
 	ctx := context.Background()
 	sa := option.WithCredentialsFile("path/to/serviceAccount.json")
