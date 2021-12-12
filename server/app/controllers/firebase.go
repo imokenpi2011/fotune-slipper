@@ -10,7 +10,10 @@ import (
 )
 
 /**
-* Firestoreのクライアントを取得する。
+ * Firestoreのクライアントを取得する。
+ *
+ * @params ctx コンテキスト
+ * @return client firestoreクライアント
  */
 func createClient(ctx context.Context) (client *firestore.Client) {
 	log.Println("Start authenticate firebase ")
