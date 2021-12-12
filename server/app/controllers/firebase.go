@@ -9,38 +9,29 @@ import (
 	"google.golang.org/api/option"
 )
 
-// Firestoreのクライアント
-var Client *firestore.Client
-var Ctx context.Context
-
 /**
-* 初期処理
+* Firestoreのクライアントを取得する。
  */
-func init() {
-	// firestoreクライアントの作成
-	createClient()
-}
-
-/**
-* Firebase関連の初期設定をする。
- */
-func createClient() {
+func createClient(ctx context.Context) (client *firestore.Client) {
 	log.Println("Start authenticate firebase ")
 	// 認証情報を定義
-	Ctx = context.Background()
+	//ctx = context.Background()
 	sa := option.WithCredentialsFile("path/to/serviceAccount.json")
 
 	// firebaseで認証する
-	app, err := firebase.NewApp(Ctx, nil, sa)
+	app, err := firebase.NewApp(ctx, nil, sa)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	// クライアントの作成
-	Client, err := app.Firestore(Ctx)
+	client, err = app.Firestore(ctx)
 	if err != nil {
 		log.Fatalln(err)
-	} else if Client == nil {
+	} else if client == nil {
 		log.Fatalln("Failed to reate firestore client.")
 	}
+	log.Println("End authenticate firebase ")
+
+	return client
 }
