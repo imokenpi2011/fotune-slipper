@@ -2,9 +2,21 @@ package controllers
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
+	"reflect"
 )
+
+type Fotune struct {
+	ID      string
+	Luck    string
+	Wish    string
+	Study   string
+	Love    string
+	Health  string
+	Waiting string
+}
 
 // コレクション名
 var collectionPath string = "fotunes"
@@ -21,22 +33,101 @@ var collectionPath string = "fotunes"
  * @params waiting おみくじ:待ち人
  * @return err エラー
  */
-func InsertFotunes(ID string, luck string, wish string, study string, love string, health string, waiting string) (err error) {
-	log.Println(fmt.Sprintf("Start insertFotunes. Fotune:[ID:%s,wish:%s ,luck:%s,study:%s,love:%s,health:%s,waiting:%s]", ID, wish, luck, study, love, health, waiting))
+func InsertFotunes(fotune Fotune) (err error) {
+	log.Println(fmt.Sprintf("Start insertFotunes. Fotune:[ID:%s,wish:%s ,luck:%s,study:%s,love:%s,health:%s,waiting:%s]",
+		fotune.ID, fotune.Wish, fotune.Luck, fotune.Study, fotune.Love, fotune.Health, fotune.Waiting))
 	ctx := context.Background()
 	client := createClient(ctx)
 
-	_, err = client.Collection(collectionPath).Doc(ID).Set(ctx, map[string]interface{}{
-		"wish":    wish,
-		"luck":    luck,
-		"study":   study,
-		"love":    love,
-		"health":  health,
-		"waiting": waiting,
+	_, err = client.Collection(collectionPath).Doc(fotune.ID).Set(ctx, map[string]interface{}{
+		"wish":    fotune.Wish,
+		"luck":    fotune.Luck,
+		"study":   fotune.Study,
+		"love":    fotune.Love,
+		"health":  fotune.Health,
+		"waiting": fotune.Waiting,
 	})
 
 	log.Println("End insertFotunes.")
 
 	return err
 
+}
+
+/**
+ * firestoreのfotunesの件数を取得する
+ *
+ * @return count 件数
+ */
+func GetFotunesCount() (count int, err error) {
+	log.Println("Start getFotunesCount.")
+
+	// クライアントの取得
+	ctx := context.Background()
+	client := createClient(ctx)
+
+	// 全件取得する(対象が100件想定のため使用)
+	fotunes, err := client.Collection(collectionPath).DocumentRefs(ctx).GetAll()
+	if err != nil {
+		return count, err
+	}
+	// 件数のみを返却する
+	count = len(fotunes)
+
+	log.Println("End getFotunesCount. COUNT:", count)
+
+	return count, err
+
+}
+
+/**
+ * IDに応じてfirestoreのfotunesを取得する
+ *
+ * @param ID おみくじ番号
+ * @return count 件数
+ */
+func GetFotunesById(id string) (fotune Fotune, err error) {
+
+	// IDが空の場合はエラー
+	if reflect.ValueOf(id).IsNil() || id == "" {
+		return fotune, errors.New("Id must be specified.")
+	}
+
+	// クライアントの取得
+	ctx := context.Background()
+	client := createClient(ctx)
+
+	// 占い結果の取得
+	res, err := client.Collection(collectionPath).Doc(id).Get(ctx)
+	if err != nil {
+		return fotune, err
+	}
+
+	// 占い結果に一つでも不正文字がある場合はエラー
+	data := res.Data()
+	for key, value := range data {
+		fmt.Printf("%v: %v\n", key, value)
+		if (value == nil) || reflect.ValueOf(value).IsNil() || value == "" {
+			return fotune, errors.New("Contains empty value.")
+		}
+	}
+
+	// 結果の代入
+	luck, _ := res.DataAt("luck")
+	wish, _ := res.DataAt("wish")
+	study, _ := res.DataAt("study")
+	love, _ := res.DataAt("love")
+	health, _ := res.DataAt("health")
+	waiting, _ := res.DataAt("waiting")
+	fotune = Fotune{
+		ID:      id,
+		Luck:    luck.(string),
+		Wish:    wish.(string),
+		Study:   study.(string),
+		Love:    love.(string),
+		Health:  health.(string),
+		Waiting: waiting.(string),
+	}
+
+	return fotune, err
 }
