@@ -18,7 +18,6 @@ import (
 func createClient(ctx context.Context) (client *firestore.Client) {
 	log.Println("Start authenticate firebase ")
 	// 認証情報を定義
-	//ctx = context.Background()
 	sa := option.WithCredentialsFile("path/to/serviceAccount.json")
 
 	// firebaseで認証する
