@@ -6,17 +6,9 @@ import (
 	"fmt"
 	"log"
 	"reflect"
-)
 
-type Fotune struct {
-	ID      string
-	Luck    string
-	Wish    string
-	Study   string
-	Love    string
-	Health  string
-	Waiting string
-}
+	"github.com/imokenpi2011/fotune-slipper/server/app/models"
+)
 
 // コレクション名
 var collectionPath string = "fotunes"
@@ -33,7 +25,7 @@ var collectionPath string = "fotunes"
  * @params waiting おみくじ:待ち人
  * @return err エラー
  */
-func InsertFotunes(fotune Fotune) (err error) {
+func InsertFotunes(fotune models.Fotune) (err error) {
 	log.Println(fmt.Sprintf("Start insertFotunes. Fotune:[ID:%s,wish:%s ,luck:%s,study:%s,love:%s,health:%s,waiting:%s]",
 		fotune.ID, fotune.Wish, fotune.Luck, fotune.Study, fotune.Love, fotune.Health, fotune.Waiting))
 	ctx := context.Background()
@@ -86,7 +78,7 @@ func GetFotunesCount() (count int, err error) {
  * @param ID おみくじ番号
  * @return count 件数
  */
-func GetFotunesById(id string) (fotune Fotune, err error) {
+func GetFotunesById(id string) (fotune models.Fotune, err error) {
 
 	// IDが空の場合はエラー
 	if reflect.ValueOf(id).IsNil() || id == "" {
@@ -119,7 +111,7 @@ func GetFotunesById(id string) (fotune Fotune, err error) {
 	love, _ := res.DataAt("love")
 	health, _ := res.DataAt("health")
 	waiting, _ := res.DataAt("waiting")
-	fotune = Fotune{
+	fotune = models.Fotune{
 		ID:      id,
 		Luck:    luck.(string),
 		Wish:    wish.(string),
