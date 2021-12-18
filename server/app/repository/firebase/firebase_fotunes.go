@@ -17,13 +17,7 @@ var collectionPath string = "fotunes"
 /**
  * firestoreのfotunesにデータを挿入する.
  *
- * @params ID おみくじ:番号
- * @params luck おみくじ:運勢
- * @params wish おみくじ:願望
- * @params study おみくじ:学業
- * @params love おみくじ:恋愛
- * @params health おみくじ:健康
- * @params waiting おみくじ:待ち人
+ * @params fotune おみくじクラス
  * @return err エラー
  */
 func InsertFotunes(fotune models.Fotune) (err error) {
@@ -79,15 +73,15 @@ func GetFotunesCount() (count int, err error) {
  * @param ID おみくじ番号
  * @return count 件数
  */
-func GetFotunesById(id int) (fotune models.Fotune, err error) {
+func GetFotunesById(fotuneId int) (fotune models.Fotune, err error) {
 
-	// IDが空の場合はエラー
-	if id == 0 {
-		return fotune, errors.New("Invalid id is specified.")
+	// IDが不正の場合はエラー
+	if fotuneId == 0 {
+		return fotune, errors.New("Invalid fotuneId is specified.")
 	}
 
 	// idを文字列に変換する
-	strId := strconv.Itoa(id)
+	strFotuneId := strconv.Itoa(fotuneId)
 	if err != nil {
 		return fotune, err
 	}
@@ -97,7 +91,7 @@ func GetFotunesById(id int) (fotune models.Fotune, err error) {
 	client := createClient(ctx)
 
 	// 占い結果の取得
-	res, err := client.Collection(collectionPath).Doc(strId).Get(ctx)
+	res, err := client.Collection(collectionPath).Doc(strFotuneId).Get(ctx)
 	if err != nil {
 		return fotune, err
 	}
@@ -119,7 +113,7 @@ func GetFotunesById(id int) (fotune models.Fotune, err error) {
 	health, _ := res.DataAt("health")
 	waiting, _ := res.DataAt("waiting")
 	fotune = models.Fotune{
-		ID:      strId,
+		ID:      strFotuneId,
 		Luck:    luck.(string),
 		Wish:    wish.(string),
 		Study:   study.(string),
