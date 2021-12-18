@@ -8,6 +8,7 @@ require (
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/djimenez/iconv-go v0.0.0-20160305225143-8960e66bd3da
 	google.golang.org/api v0.62.0
+	gopkg.in/go-ini/ini.v1 v1.66.2
 )
 
 require (
