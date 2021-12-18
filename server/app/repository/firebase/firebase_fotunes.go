@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"log"
 	"reflect"
+	"strconv"
 
-	"github.com/imokenpi2011/fotune-slipper/server/app/models"
+	models "github.com/imokenpi2011/fotune-slipper/server/app/models/fotune"
 )
 
 // コレクション名
@@ -78,11 +79,17 @@ func GetFotunesCount() (count int, err error) {
  * @param ID おみくじ番号
  * @return count 件数
  */
-func GetFotunesById(id string) (fotune models.Fotune, err error) {
+func GetFotunesById(id int) (fotune models.Fotune, err error) {
 
 	// IDが空の場合はエラー
-	if reflect.ValueOf(id).IsNil() || id == "" {
-		return fotune, errors.New("Id must be specified.")
+	if id == 0 {
+		return fotune, errors.New("Invalid id is specified.")
+	}
+
+	// idを文字列に変換する
+	strId := strconv.Itoa(id)
+	if err != nil {
+		return fotune, err
 	}
 
 	// クライアントの取得
@@ -90,7 +97,7 @@ func GetFotunesById(id string) (fotune models.Fotune, err error) {
 	client := createClient(ctx)
 
 	// 占い結果の取得
-	res, err := client.Collection(collectionPath).Doc(id).Get(ctx)
+	res, err := client.Collection(collectionPath).Doc(strId).Get(ctx)
 	if err != nil {
 		return fotune, err
 	}
@@ -112,7 +119,7 @@ func GetFotunesById(id string) (fotune models.Fotune, err error) {
 	health, _ := res.DataAt("health")
 	waiting, _ := res.DataAt("waiting")
 	fotune = models.Fotune{
-		ID:      id,
+		ID:      strId,
 		Luck:    luck.(string),
 		Wish:    wish.(string),
 		Study:   study.(string),
