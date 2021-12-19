@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"math/rand"
+	"time"
 
 	repository "github.com/imokenpi2011/fotune-slipper/server/app/repository/firebase"
 )
@@ -28,6 +29,8 @@ func GenerateFotuneNumber() (fotuneId int, err error) {
 	}
 
 	// 1からfirestoreの総件数までのランダムな数を返す(0の場合は再抽選する)
+	// 現在時刻からSeed値をセット
+	rand.Seed(time.Now().UnixNano())
 	for fotuneId == 0 {
 		fotuneId = rand.Intn(totalFotunesNum)
 	}
