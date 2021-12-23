@@ -10,3 +10,10 @@ type Fotune struct {
 	Health  string // 健康
 	Waiting string // 待ち人
 }
+
+//レスポンス
+type FotuneResponse struct {
+	Status     int    // 結果コード
+	ErrMessage string // エラーメッセージ
+	Fotune     Fotune // おみくじ結果
+}
