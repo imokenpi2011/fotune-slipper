@@ -1,4 +1,4 @@
-module fotune-slipper/server
+module github.com/imokenpi2011/fotune-slipper/server
 
 go 1.17
 
@@ -7,7 +7,9 @@ require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/PuerkitoBio/goquery v1.8.0
 	github.com/djimenez/iconv-go v0.0.0-20160305225143-8960e66bd3da
+	github.com/google/martian v2.1.0+incompatible
 	google.golang.org/api v0.62.0
+	gopkg.in/go-ini/ini.v1 v1.66.2
 )
 
 require (
