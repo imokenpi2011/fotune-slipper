@@ -27,7 +27,7 @@ func init() {
 //設定を読み込む
 func LoadConfig() {
 	// 設定を記載したiniファイルを読み込む
-	configDir := "/config.ini"
+	configDir := "config.ini"
 	//root直下の設定ファイルを読み込む
 	cfg, err := ini.Load(configDir)
 	if err != nil {
