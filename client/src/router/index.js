@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/top',
     name: 'Main',
     component: () => import(/* webpackChunkName: "about" */ '../views/Main.vue')
   },
@@ -17,7 +17,7 @@ const routes = [
   },
   {
     path: '*',
-    redirect: '/'
+    redirect: '/top'
   }
 ]
 
